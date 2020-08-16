@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
      seq             bigint NOT NULL AUTO_INCREMENT,
      email           varchar(50) NOT NULL,
      passwd          varchar(80) NOT NULL,
