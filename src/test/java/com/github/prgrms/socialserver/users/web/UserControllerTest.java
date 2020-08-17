@@ -72,7 +72,7 @@ public class UserControllerTest {
         UserDTO random = UserModelConverter.convertToDTO(UserModelConverterTest.getRandomEntity(1L));
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO(true, "SUCCEEDED");
 
-        when(userService.join(random)).thenReturn(apiResponseDTO);
+        when(userService.join(asJsonString(random))).thenReturn(apiResponseDTO);
 
         mvc.perform(post("/api/users/join").contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

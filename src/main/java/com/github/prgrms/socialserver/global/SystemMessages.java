@@ -5,7 +5,8 @@ public final class SystemMessages {
     public static final String[] ERR_MSG = {
             "Failed to proceed SQL execution",
             "Failed to close connection",
-            "Failted to retrieve id, No row in result set"
+            "Failted to retrieve id, No row in result set",
+            "Invalid Request"
     };
 
     public static final String[] SUCCESS_MSG = {

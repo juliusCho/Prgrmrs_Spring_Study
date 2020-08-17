@@ -22,11 +22,13 @@ public final class DateUtil {
 
 
     public static String convertToLocalString(Date date) {
+        if (date == null) return null;
         OffsetDateTime odt = OffsetDateTime.of(LocalDateTime.ofInstant(date.toInstant(), offset), ZoneOffset.UTC);
         return format.format(new Date(odt.toInstant().toEpochMilli()));
     }
 
     public static Date convertToUTCDate(String date) {
+        if (date == null || date.isEmpty()) return null;
         try {
             Date dt = format.parse(date);
             OffsetDateTime odt = OffsetDateTime.of(LocalDateTime.ofInstant(dt.toInstant(), ZoneOffset.UTC), offset);

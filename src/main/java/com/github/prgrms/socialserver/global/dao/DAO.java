@@ -133,7 +133,7 @@ public class DAO {
     }
 
     private Object select(String sql, LinkedHashMap<Integer, Object> params) throws SQLException {
-        PreparedStatement ps = this.con.prepareStatement(sql, Statement.KEEP_CURRENT_RESULT);
+        PreparedStatement ps = this.con.prepareStatement(sql);
         this.setParams(ps, params);
         ResultSet rs = ps.executeQuery();
         if (!rs.first()) {

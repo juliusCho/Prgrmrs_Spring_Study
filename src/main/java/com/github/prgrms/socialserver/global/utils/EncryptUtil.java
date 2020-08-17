@@ -67,7 +67,7 @@ public final class EncryptUtil {
             } catch (Exception e) {
                 StackTraceElement[] ste = e.getStackTrace();
                 log.error(String.valueOf(ste[ste.length - 1]));
-                return null;
+                return str;
             }
         }
 
@@ -81,7 +81,7 @@ public final class EncryptUtil {
             } catch (Exception e) {
                 StackTraceElement[] ste = e.getStackTrace();
                 log.error(String.valueOf(ste[ste.length - 1]));
-                return null;
+                return str;
             }
         }
     }
