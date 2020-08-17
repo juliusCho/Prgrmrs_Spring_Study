@@ -19,7 +19,7 @@ public class UserController {
     private UserService userService;
 
 
-    @GetMapping(value = "", produces = APPLICATION_JSON)
+    @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<List<UserDTO>> list() {
         return ResponseEntity.ok(userService.list());
     }
