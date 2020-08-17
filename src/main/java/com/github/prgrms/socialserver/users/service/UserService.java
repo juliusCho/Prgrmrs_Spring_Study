@@ -16,14 +16,20 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<UserDTO> list() {
-        List<UserEntity> entityList = userRepository.list();
-        return UserModelConverter.getAggregate(entityList);
+    public Object list() {
+        Object result = userRepository.list();
+        if (result instanceof List<?>) {
+            return UserModelConverter.getAggregate((List) result);
+        }
+        return result;
     }
 
-    public UserDTO detail(Long seq) {
-        UserEntity entity = userRepository.detail(seq);
-        return UserModelConverter.convertToDTO(entity);
+    public Object detail(Long seq) {
+        Object result = userRepository.detail(seq);
+        if (result instanceof UserDTO) {
+            return UserModelConverter.convertToDTO((UserEntity) result);
+        }
+        return result;
     }
 
     public ApiResponseDTO join(UserDTO dto) {

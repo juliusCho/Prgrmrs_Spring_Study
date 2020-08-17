@@ -16,16 +16,16 @@ public class UserRepository {
     @Autowired
     private DAO dao;
 
-    public List<UserEntity> list() {
+    public Object list() {
         String sql = "SELECT * FROM users";
-        return (List) dao.executeSQL(CRUD.LIST, sql, new LinkedHashMap<>());
+        return dao.executeSQL(CRUD.LIST, sql, new LinkedHashMap<>());
     }
 
-    public UserEntity detail(Long seq) {
+    public Object detail(Long seq) {
         String sql = "SELECT * FROM users WHERE seq = ?";
         LinkedHashMap<Integer, Object> params = new LinkedHashMap<>();
         params.put(1, seq);
-        return (UserEntity) dao.executeSQL(CRUD.R, sql, params);
+        return dao.executeSQL(CRUD.R, sql, params);
     }
 
     public ApiResponseDTO insert(UserEntity entity) {

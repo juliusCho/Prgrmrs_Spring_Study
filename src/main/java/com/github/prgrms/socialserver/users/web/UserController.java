@@ -20,12 +20,12 @@ public class UserController {
 
 
     @GetMapping(produces = APPLICATION_JSON)
-    public ResponseEntity<List<UserDTO>> list() {
+    public ResponseEntity<?> list() {
         return ResponseEntity.ok(userService.list());
     }
 
     @GetMapping(value = "{seq}", produces = APPLICATION_JSON)
-    public ResponseEntity<UserDTO> detail(@PathVariable Long seq) {
+    public ResponseEntity<?> detail(@PathVariable Long seq) {
         return ResponseEntity.ok(userService.detail(seq));
     }
 

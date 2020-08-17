@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -127,7 +126,7 @@ public class DAO {
         this.setParams(ps, params);
         ResultSet rs = ps.executeQuery();
         if (!rs.first()) {
-            return new ApiResponseDTO(true, SystemMessages.SUCCESS_MSG[3]);
+            return new ApiResponseDTO(true, SystemMessages.SUCCESS_MSG[2]);
         } else {
             return this.getEntity(rs);
         }
@@ -138,7 +137,7 @@ public class DAO {
         this.setParams(ps, params);
         ResultSet rs = ps.executeQuery();
         if (!rs.first()) {
-            return new ApiResponseDTO(true, SystemMessages.SUCCESS_MSG[3]);
+            return new ApiResponseDTO(true, SystemMessages.SUCCESS_MSG[2]);
         }
 
         List<UserEntity> entityList = new ArrayList<>();
