@@ -17,7 +17,7 @@ public class UserEntity implements Serializable {
 
     private String passwd;
 
-    private int loginCount;
+    private Integer loginCount;
 
     private Date lastLoginAt;
 
@@ -51,11 +51,11 @@ public class UserEntity implements Serializable {
         this.passwd = passwd;
     }
 
-    public int getLoginCount() {
+    public Integer getLoginCount() {
         return this.loginCount;
     }
 
-    public void setLoginCount(int loginCount) {
+    public void setLoginCount(Integer loginCount) {
         this.loginCount = loginCount;
     }
 
@@ -85,7 +85,7 @@ public class UserEntity implements Serializable {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         final UserEntity entity = (UserEntity) o;
-        return this.loginCount == entity.loginCount &&
+        return this.loginCount.compareTo(entity.loginCount) == 0 &&
                 Objects.equals(this.seq, entity.seq) &&
                 Objects.equals(this.email, entity.email) &&
                 Objects.equals(this.passwd, entity.passwd);

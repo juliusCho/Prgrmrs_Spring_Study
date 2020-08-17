@@ -1,16 +1,25 @@
 package com.github.prgrms.socialserver.global.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Optional;
 
 public final class EncryptUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(EncryptUtil.class);
 
     private static final Charset ENCODING_TYPE = StandardCharsets.UTF_8;
 
@@ -22,13 +31,18 @@ public final class EncryptUtil {
 
 
 
-    public static Encryptor setEncryption(String key) throws NoSuchPaddingException, NoSuchAlgorithmException {
+    public static Encryptor setEncryption(String key) {
         validation(key);
 
-        byte[] keyBytes = key.getBytes(ENCODING_TYPE);
-        secretKeySpec = new SecretKeySpec(keyBytes, "AES");
-        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        ivParameterSpec = new IvParameterSpec(keyBytes);
+        try {
+            byte[] keyBytes = key.getBytes(ENCODING_TYPE);
+            secretKeySpec = new SecretKeySpec(keyBytes, "AES");
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            ivParameterSpec = new IvParameterSpec(keyBytes);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+            StackTraceElement[] ste = e.getStackTrace();
+            log.error(String.valueOf(ste[ste.length - 1]));
+        }
 
         return new Encryptor();
     }
@@ -47,20 +61,32 @@ public final class EncryptUtil {
 
     public static class Encryptor {
 
-        public String encrypt(String str) throws Exception {
+        public String encrypt(String str) {
             if (str == null || str.isEmpty()) return null;
 
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-            byte[] encrypted = cipher.doFinal(str.getBytes(ENCODING_TYPE));
-            return new String(Base64.getEncoder().encode(encrypted), ENCODING_TYPE);
+            try {
+                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+                byte[] encrypted = cipher.doFinal(str.getBytes(ENCODING_TYPE));
+                return new String(Base64.getEncoder().encode(encrypted), ENCODING_TYPE);
+            } catch (Exception e) {
+                StackTraceElement[] ste = e.getStackTrace();
+                log.error(String.valueOf(ste[ste.length - 1]));
+                return null;
+            }
         }
 
-        public String decrypt(String str) throws Exception {
+        public String decrypt(String str) {
             if (str == null || str.isEmpty()) return null;
 
-            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-            byte[] decoded = Base64.getDecoder().decode(str.getBytes(ENCODING_TYPE));
-            return new String(cipher.doFinal(decoded), ENCODING_TYPE);
+            try {
+                cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+                byte[] decoded = Base64.getDecoder().decode(str.getBytes(ENCODING_TYPE));
+                return new String(cipher.doFinal(decoded), ENCODING_TYPE);
+            } catch (Exception e) {
+                StackTraceElement[] ste = e.getStackTrace();
+                log.error(String.valueOf(ste[ste.length - 1]));
+                return null;
+            }
         }
     }
 

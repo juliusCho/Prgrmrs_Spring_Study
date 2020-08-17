@@ -10,6 +10,12 @@ public class UserDTO implements Serializable {
 
     public UserDTO() {}
 
+    public UserDTO(String passwd, String email) {
+        seq = 0L;
+        this.passwd = passwd;
+        this.email = email;
+    }
+
     private UserDTO(Builder builder) {
         seq = builder.seq;
         email = builder.email;

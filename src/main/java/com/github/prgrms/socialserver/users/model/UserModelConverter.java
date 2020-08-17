@@ -16,7 +16,7 @@ public class UserModelConverter {
 
     private static final Logger log = LoggerFactory.getLogger(UserModelConverter.class);
 
-    public List<UserDTO> getAggregate(List<UserEntity> entityList) {
+    public static final List<UserDTO> getAggregate(List<UserEntity> entityList) {
         if (entityList == null) {
             return new ArrayList<>();
         }
@@ -24,7 +24,7 @@ public class UserModelConverter {
                 .map(x -> {
                     UserDTO dto = null;
                     try {
-                        dto = this.convertToDTO(x);
+                        dto = convertToDTO(x);
                     } catch (Exception e) {
                         StackTraceElement[] ste = e.getStackTrace();
                         log.error(String.valueOf(ste[ste.length - 1]));
@@ -35,7 +35,7 @@ public class UserModelConverter {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO convertToDTO(UserEntity entity) throws Exception {
+    public static final UserDTO convertToDTO(UserEntity entity) {
         if (entity.getSeq().compareTo(0L) == 0 || entity.getEmail().isEmpty()) {
             return null;
         }
@@ -47,7 +47,7 @@ public class UserModelConverter {
                 .build();
     }
 
-    public UserEntity convertToEntity(UserDTO dto) throws Exception {
+    public static final UserEntity convertToEntity(UserDTO dto) {
         UserEntity entity = new UserEntity();
         entity.setSeq(dto.getSeq());
         entity.setEmail(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).encrypt(dto.getEmail()));

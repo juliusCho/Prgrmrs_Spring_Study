@@ -9,6 +9,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 
 public class UtilTest {
 
@@ -16,7 +19,11 @@ public class UtilTest {
 
     @Test
     public void encryptUtil_constructWithInvalidKeyLength_IllegalArgumentException() throws Exception {
-        EncryptUtil.setEncryption("password1234567");
+        try {
+            fail(EncryptUtil.setEncryption("password1234567").toString());
+        } catch (Exception e) {
+            assertTrue(e.getClass().equals(IllegalArgumentException.class));
+        }
     }
 
     @Test

@@ -17,7 +17,7 @@ public class UserModelConverterTest {
     private static final UserModelConverter userModelConverter = new UserModelConverter();
 
 
-    private UserEntity getRandomEntity(Long seq) throws Exception {
+    public static UserEntity getRandomEntity(Long seq) throws Exception {
         UserEntity entity = new UserEntity();
         entity.setSeq(seq);
         entity.setEmail(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).encrypt("user" + seq + "@prgrmrs6.com"));
@@ -33,7 +33,7 @@ public class UserModelConverterTest {
     @Test
     public void userModelConverter_withRandomEntity_convertToDTOAndEntity() throws Exception {
         UserEntity entity = this.getRandomEntity(1L);
-        log.debug("INPUT: {}", entity.toString());
+        log.debug("INPUT: {}", entity);
 
         assert(userModelConverter.convertToDTO(entity).getClass().equals(UserDTO.class));
 
@@ -50,12 +50,10 @@ public class UserModelConverterTest {
         entityList.add(this.getRandomEntity(1L));
         entityList.add(this.getRandomEntity(2L));
         entityList.add(this.getRandomEntity(3L));
-        log.debug("INPUT: {}", entityList.toString());
+        log.debug("INPUT: {}", entityList);
 
         List<UserDTO> dtoList = userModelConverter.getAggregate(entityList);
-        log.debug("OUTPUT: {}", dtoList.toString());
+        log.debug("OUTPUT: {}", dtoList);
     }
-
-
 
 }
