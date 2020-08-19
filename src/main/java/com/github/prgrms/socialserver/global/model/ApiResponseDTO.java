@@ -1,18 +1,12 @@
 package com.github.prgrms.socialserver.global.model;
 
-import java.io.Serializable;
+public class ApiResponseDTO<T> {
 
-public class ApiResponseDTO implements Serializable {
+    private final boolean success;
 
-    private static final long serialVersionUID = -5065359100290454048L;
+    private final T response;
 
-    private boolean success;
-
-    private String response;
-
-    public ApiResponseDTO() {};
-
-    public ApiResponseDTO(boolean success, String response) {
+    public ApiResponseDTO(boolean success, T response) {
         this.success = success;
         this.response = response;
     }
@@ -20,18 +14,6 @@ public class ApiResponseDTO implements Serializable {
 
     public boolean isSuccess() {
         return this.success;
-    }
-
-    public void setSuccess(final boolean success) {
-        this.success = success;
-    }
-
-    public String getResponse() {
-        return this.response;
-    }
-
-    public void setResponse(final String response) {
-        this.response = response;
     }
 
 

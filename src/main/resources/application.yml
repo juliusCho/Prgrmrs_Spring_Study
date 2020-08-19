@@ -18,3 +18,8 @@ spring:
 logging:
   level:
     org.springframework.jdbc.core: TRACE
+
+secrets:
+  users:
+    passwd: password12345678
+    email: email12345678910

@@ -39,8 +39,8 @@ public class UserModelConverter {
         if (entity.getSeq().compareTo(0L) == 0 || entity.getEmail().isEmpty()) {
             return null;
         }
-        return new UserDTO.Builder(entity.getSeq(), EncryptUtil.setEncryption(Secrets.EMAIL_KEY).decrypt(entity.getEmail()))
-                .passwd(EncryptUtil.setEncryption(Secrets.PASSWD_KEY).decrypt(entity.getPasswd()))
+        return new UserDTO
+                .Builder(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).decrypt(entity.getEmail()), EncryptUtil.setEncryption(Secrets.PASSWD_KEY).decrypt(entity.getPasswd()))
                 .loginCount(entity.getLoginCount())
                 .lastLoginAt(DateUtil.convertToLocalString(entity.getLastLoginAt()))
                 .createAt(DateUtil.convertToLocalString(entity.getCreateAt()))
@@ -48,14 +48,12 @@ public class UserModelConverter {
     }
 
     public static final UserEntity convertToEntity(UserDTO dto) {
-        UserEntity entity = new UserEntity();
-        entity.setSeq(dto.getSeq());
-        entity.setEmail(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).encrypt(dto.getEmail()));
-        entity.setPasswd(EncryptUtil.setEncryption(Secrets.PASSWD_KEY).encrypt(dto.getPasswd()));
-        entity.setLoginCount(dto.getLoginCount());
-        entity.setLastLoginAt(DateUtil.convertToUTCDate(dto.getLastLoginAt()));
-        entity.setCreateAt(DateUtil.convertToUTCDate(dto.getCreateAt()));
-        return entity;
+        return new UserEntity
+                .Builder(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).encrypt(dto.getEmail()), EncryptUtil.setEncryption(Secrets.PASSWD_KEY).encrypt(dto.getPasswd()))
+                .loginCount(dto.getLoginCount())
+                .lastLoginAt(DateUtil.convertToUTCDate(dto.getLastLoginAt()))
+                .createAt(DateUtil.convertToUTCDate(dto.getCreateAt()))
+                .build();
     }
 
 }

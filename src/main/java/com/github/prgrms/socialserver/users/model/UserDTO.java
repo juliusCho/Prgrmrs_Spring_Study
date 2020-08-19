@@ -8,16 +8,12 @@ public class UserDTO implements Serializable {
     private static final long serialVersionUID = -1322458234837696034L;
 
 
-    public UserDTO() {}
-
     public UserDTO(String passwd, String email) {
-        seq = 0L;
         this.passwd = passwd;
         this.email = email;
     }
 
     private UserDTO(Builder builder) {
-        seq = builder.seq;
         email = builder.email;
         passwd = builder.passwd;
         loginCount = builder.loginCount;
@@ -26,21 +22,13 @@ public class UserDTO implements Serializable {
     }
 
 
-
-
-    private Long seq;
-    private String email;
-    private String passwd;
+    private final String email;
+    private final String passwd;
     private int loginCount;
     private String lastLoginAt;
     private String createAt;
 
 
-
-
-    public Long getSeq() {
-        return this.seq;
-    }
     public String getEmail() {
         return this.email;
     }
@@ -61,23 +49,17 @@ public class UserDTO implements Serializable {
 
 
     public static class Builder {
-        private final Long seq;
         private final String email;
-        private String passwd;
+        private final String passwd;
         private int loginCount;
         private String lastLoginAt;
         private String createAt;
 
-        public Builder(Long seq, String email) {
-            this.seq = seq;
+        public Builder(String email, String passwd) {
             this.email = email;
-        }
-
-        public Builder passwd(String passwd) {
             this.passwd = passwd;
-            return this;
         }
-        public Builder loginCount(int passwd) {
+        public Builder loginCount(int loginCount) {
             this.loginCount = loginCount;
             return this;
         }
@@ -97,29 +79,24 @@ public class UserDTO implements Serializable {
 
 
 
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         final UserDTO userDTO = (UserDTO) o;
-        return this.seq.equals(userDTO.seq) &&
-                this.email.equals(userDTO.email);
+        return this.email.equals(userDTO.email) &&
+                this.passwd.equals(userDTO.passwd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.seq, this.email);
+        return Objects.hash(this.email, this.passwd);
     }
-
-
-
 
     @Override
     public String toString() {
         return "UserDTO{" +
-                "seq=" + seq +
-                ", email='" + email + '\'' +
+                "email='" + email + '\'' +
                 ", passwd='" + passwd + '\'' +
                 ", loginCount=" + loginCount +
                 ", lastLoginAt='" + lastLoginAt + '\'' +
