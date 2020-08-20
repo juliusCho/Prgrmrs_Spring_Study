@@ -33,6 +33,9 @@ public class UserModelConverterTest {
 
     @Test
     public void userModelConverter_withRandomEntity_convertToDTOAndEntity() throws Exception {
+        userModelConverter.setEmailKey(EMAIL_KEY);
+        userModelConverter.setPasswdKey(PASSWD_KEY);
+
         UserEntity entity = this.getRandomEntity(1L);
         log.debug("INPUT: {}", entity);
 
@@ -46,6 +49,9 @@ public class UserModelConverterTest {
 
     @Test
     public void userModelConverter_withRandomEntityList_convertToDTOList() throws Exception {
+        userModelConverter.setEmailKey(EMAIL_KEY);
+        userModelConverter.setPasswdKey(PASSWD_KEY);
+
         List<UserEntity> entityList = new ArrayList<>();
         entityList.add(this.getRandomEntity(1L));
         entityList.add(this.getRandomEntity(2L));

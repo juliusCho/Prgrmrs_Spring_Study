@@ -45,6 +45,9 @@ public class UserRepositoryTest {
 
     private UserRepository userRepository = new UserRepository(jdbcTemplate, new UserMapper());
 
+    private static final String PASSWD_KEY = "password12345678";
+    private static final String EMAIL_KEY = "email12345678910";
+
 
     @Test
     public void jdbc_testConnect_shouldBeSuccessful() throws Exception {
@@ -79,6 +82,10 @@ public class UserRepositoryTest {
 
     @Test
     public void dao_insertUser_succeedAndResponse() throws Exception {
+        UserModelConverter userModelConverter = new UserModelConverter();
+        userModelConverter.setPasswdKey(PASSWD_KEY);
+        userModelConverter.setEmailKey(EMAIL_KEY);
+
         UserEntity random = UserModelConverterTest.getRandomEntity(4L);
         UserDTO dto = UserModelConverter.convertToDTO(UserModelConverterTest.getRandomEntity(4L));
         log.debug("DTO: {}", UserModelConverter.convertToDTO(random));
