@@ -1,10 +1,10 @@
 package com.github.prgrms.socialserver.users.model;
 
-import com.github.prgrms.socialserver.global.Secrets;
 import com.github.prgrms.socialserver.global.utils.DateUtil;
 import com.github.prgrms.socialserver.global.utils.EncryptUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,6 +13,18 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserModelConverter {
+
+    private static String PASSWD_KEY;
+    private static String EMAIL_KEY;
+
+    @Value("${secrets.users.passwd}")
+    public void setPasswdKey(String passwdKey) {
+        PASSWD_KEY = passwdKey;
+    }
+    @Value("${secrets.users.email}")
+    public void setEmailKey(String emailKey) {
+        EMAIL_KEY = emailKey;
+    }
 
     private static final Logger log = LoggerFactory.getLogger(UserModelConverter.class);
 
@@ -40,7 +52,7 @@ public class UserModelConverter {
             return null;
         }
         return new UserDTO
-                .Builder(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).decrypt(entity.getEmail()), EncryptUtil.setEncryption(Secrets.PASSWD_KEY).decrypt(entity.getPasswd()))
+                .Builder(EncryptUtil.setEncryption(EMAIL_KEY).decrypt(entity.getEmail()), EncryptUtil.setEncryption(PASSWD_KEY).decrypt(entity.getPasswd()))
                 .loginCount(entity.getLoginCount())
                 .lastLoginAt(DateUtil.convertToLocalString(entity.getLastLoginAt()))
                 .createAt(DateUtil.convertToLocalString(entity.getCreateAt()))
@@ -49,7 +61,7 @@ public class UserModelConverter {
 
     public static final UserEntity convertToEntity(UserDTO dto) {
         return new UserEntity
-                .Builder(EncryptUtil.setEncryption(Secrets.EMAIL_KEY).encrypt(dto.getEmail()), EncryptUtil.setEncryption(Secrets.PASSWD_KEY).encrypt(dto.getPasswd()))
+                .Builder(EncryptUtil.setEncryption(EMAIL_KEY).encrypt(dto.getEmail()), EncryptUtil.setEncryption(PASSWD_KEY).encrypt(dto.getPasswd()))
                 .loginCount(dto.getLoginCount())
                 .lastLoginAt(DateUtil.convertToUTCDate(dto.getLastLoginAt()))
                 .createAt(DateUtil.convertToUTCDate(dto.getCreateAt()))

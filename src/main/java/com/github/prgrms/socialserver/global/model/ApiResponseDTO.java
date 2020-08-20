@@ -16,6 +16,9 @@ public class ApiResponseDTO<T> {
         return this.success;
     }
 
+    public T getResponse() {
+        return this.response;
+    }
 
     @Override
     public String toString() {
