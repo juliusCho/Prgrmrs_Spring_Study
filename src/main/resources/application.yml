@@ -23,3 +23,10 @@ secrets:
   users:
     passwd: password12345678
     email: email12345678910
+
+jwt:
+  token:
+    header: api_key
+    issuer: social_server
+    clientSecret: Rel3Bjce2MajBo09qgkNgYaTuzvJe8iwnBFhsDS5
+    expirySeconds: 0
