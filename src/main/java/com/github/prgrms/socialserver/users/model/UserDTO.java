@@ -1,107 +1,102 @@
 package com.github.prgrms.socialserver.users.model;
 
-import java.io.Serializable;
-import java.util.Objects;
+import com.github.prgrms.socialserver.global.utils.DateUtil;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class UserDTO implements Serializable {
+import java.time.LocalDateTime;
 
-    private static final long serialVersionUID = -1322458234837696034L;
+import static org.springframework.beans.BeanUtils.copyProperties;
 
+public class UserDTO {
 
-    public UserDTO(String passwd, String email) {
-        this.passwd = passwd;
+    public UserDTO(UserEntity entity) {
+        copyProperties(entity, this);
+    }
+
+    private Long seq;
+
+    private EmailVO email;
+
+    // TODO 이름 프로퍼티 추가
+
+    private int loginCount;
+
+    private LocalDateTime lastLoginAt;
+
+    private LocalDateTime createAt;
+
+    private String lastLoginDt;
+
+    private String createDt;
+
+    public Long getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Long seq) {
+        this.seq = seq;
+    }
+
+    public EmailVO getEmail() {
+        return email;
+    }
+
+    public void setEmail(EmailVO email) {
         this.email = email;
     }
 
-    private UserDTO(Builder builder) {
-        email = builder.email;
-        passwd = builder.passwd;
-        loginCount = builder.loginCount;
-        lastLoginAt = builder.lastLoginAt;
-        createAt = builder.createAt;
-    }
-
-
-    private final String email;
-    private final String passwd;
-    private int loginCount;
-    private String lastLoginAt;
-    private String createAt;
-
-
-    public String getEmail() {
-        return this.email;
-    }
-    public String getPasswd() {
-        return this.passwd;
-    }
     public int getLoginCount() {
-        return this.loginCount;
-    }
-    public String getLastLoginAt() {
-        return this.lastLoginAt;
-    }
-    public String getCreateAt() {
-        return this.createAt;
+        return loginCount;
     }
 
-
-
-
-    public static class Builder {
-        private final String email;
-        private final String passwd;
-        private int loginCount;
-        private String lastLoginAt;
-        private String createAt;
-
-        public Builder(String email, String passwd) {
-            this.email = email;
-            this.passwd = passwd;
-        }
-        public Builder loginCount(int loginCount) {
-            this.loginCount = loginCount;
-            return this;
-        }
-        public Builder lastLoginAt(String lastLoginAt) {
-            this.lastLoginAt = lastLoginAt;
-            return this;
-        }
-        public Builder createAt(String createAt) {
-            this.createAt = createAt;
-            return this;
-        }
-        public UserDTO build() {
-            return new UserDTO(this);
-        }
+    public void setLoginCount(int loginCount) {
+        this.loginCount = loginCount;
     }
 
-
-
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-        final UserDTO userDTO = (UserDTO) o;
-        return this.email.equals(userDTO.email) &&
-                this.passwd.equals(userDTO.passwd);
+    public LocalDateTime getLastLoginAt() {
+        return DateUtil.convertToUTCDate(lastLoginDt);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.email, this.passwd);
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return DateUtil.convertToUTCDate(createDt);
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
+    public String getLastLoginDt() {
+        return this.lastLoginDt;
+    }
+
+    public void setLastLoginDt(final String lastLoginDt) {
+        this.lastLoginDt = lastLoginDt;
+    }
+
+    public String getCreateDt() {
+        return this.createDt;
+    }
+
+    public void setCreateDt(final String createDt) {
+        this.createDt = createDt;
     }
 
     @Override
     public String toString() {
-        return "UserDTO{" +
-                "email='" + email + '\'' +
-                ", passwd='" + passwd + '\'' +
-                ", loginCount=" + loginCount +
-                ", lastLoginAt='" + lastLoginAt + '\'' +
-                ", createAt='" + createAt + '\'' +
-                '}';
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("seq", seq)
+                .append("email", email)
+                .append("loginCount", loginCount)
+                .append("lastLoginAt", lastLoginAt)
+                .append("createAt", createAt)
+                .append("lastLoginDt", lastLoginDt)
+                .append("createDt", createDt)
+                .toString();
     }
 
 }

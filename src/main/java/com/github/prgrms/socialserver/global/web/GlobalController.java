@@ -22,8 +22,8 @@ public class GlobalController {
     public MessageSource messageSource;
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponseDTO> duplicatedUser() {
-        return ResponseEntity.ok(new ApiResponseDTO(false, messageSource.getMessage("api.users.msg.duplicate", null, Locale.getDefault())));
+    public ResponseEntity<ApiResponseDTO> duplicatedUser(IllegalArgumentException e) {
+        return ResponseEntity.ok(new ApiResponseDTO(false, e.getMessage()));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

@@ -1,27 +1,19 @@
 package com.github.prgrms.socialserver.global.configs;
 
+import com.github.prgrms.socialserver.global.utils.MessageUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.context.support.MessageSourceAccessor;
 
 @Configuration
 public class EtcConfigs {
 
-    @Bean(name = "messageSource")
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Bean(name = "getValidator")
-    public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource());
-        return bean;
+    @Bean
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
+        MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
+        MessageUtil.setMessageSourceAccessor(messageSourceAccessor);
+        return messageSourceAccessor;
     }
 
 }

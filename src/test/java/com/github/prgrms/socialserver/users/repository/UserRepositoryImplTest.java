@@ -1,11 +1,9 @@
 package com.github.prgrms.socialserver.users.repository;
 
-import com.github.prgrms.socialserver.global.model.ApiResponseDTO;
 import com.github.prgrms.socialserver.users.model.UserDTO;
 import com.github.prgrms.socialserver.users.model.UserEntity;
 import com.github.prgrms.socialserver.users.model.UserModelConverter;
 import com.github.prgrms.socialserver.users.model.UserModelConverterTest;
-import com.github.prgrms.socialserver.users.repository.UserRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +20,9 @@ import java.util.List;
 
 @SpringBootTest
 @ComponentScan(basePackages = {"com.github.prgrms.socialserver"})
-public class UserRepositoryTest {
+public class UserRepositoryImplTest {
 
-    private static final Logger log = LoggerFactory.getLogger(UserRepositoryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(UserRepositoryImplTest.class);
 
     private String h2 = "jdbc:h2:file:~/prgrmrs6/class#1_julius/h2";
 
@@ -43,10 +41,7 @@ public class UserRepositoryTest {
 
     private JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-    private UserRepository userRepository = new UserRepository(jdbcTemplate, new UserMapper());
-
-    private static final String PASSWD_KEY = "password12345678";
-    private static final String EMAIL_KEY = "email12345678910";
+    private UserRepositoryImpl userRepositoryImpl = new UserRepositoryImpl(jdbcTemplate, new UserMapper());
 
 
     @Test
@@ -60,7 +55,7 @@ public class UserRepositoryTest {
     public void dao_selectOne_shouldGetSeq1User() throws Exception {
         UserEntity random = UserModelConverterTest.getRandomEntity(1L);
 
-        UserEntity entity = (UserEntity) userRepository.getUserDetail(random.getSeq());
+        UserEntity entity = (UserEntity) userRepositoryImpl.getUserDetail(random.getSeq());
         log.debug("RESULT: {}", entity);
         assert(random.getSeq().compareTo(entity.getSeq()) == 0);
     }
@@ -72,7 +67,7 @@ public class UserRepositoryTest {
         randomList.add(UserModelConverterTest.getRandomEntity(2L));
         randomList.add(UserModelConverterTest.getRandomEntity(3L));
 
-        List<UserEntity> entityList = userRepository.getAllUsers();
+        List<UserEntity> entityList = userRepositoryImpl.getAllUsers();
         log.debug("RESULT: {}", entityList);
 
         for (UserEntity random: randomList) {
@@ -83,16 +78,14 @@ public class UserRepositoryTest {
     @Test
     public void dao_insertUser_succeedAndResponse() throws Exception {
         UserModelConverter userModelConverter = new UserModelConverter();
-        userModelConverter.setPasswdKey(PASSWD_KEY);
-        userModelConverter.setEmailKey(EMAIL_KEY);
 
-        UserEntity random = UserModelConverterTest.getRandomEntity(4L);
-        UserDTO dto = UserModelConverter.convertToDTO(UserModelConverterTest.getRandomEntity(4L));
+        UserEntity random = UserModelConverterTest.getRandomEntity(99L);
+        UserDTO dto = UserModelConverter.convertToDTO(UserModelConverterTest.getRandomEntity(99L));
         log.debug("DTO: {}", UserModelConverter.convertToDTO(random));
 
-        Number number = userRepository.insertUser(UserModelConverter.convertToEntity(dto));
+        int number = userRepositoryImpl.insertUser(UserModelConverter.convertToEntity(dto));
         log.debug("RESULT: {}", number);
-        assert (number != null);
+        assert (number != 0);
     }
 
 }

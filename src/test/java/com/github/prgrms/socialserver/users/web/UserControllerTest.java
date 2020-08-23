@@ -45,15 +45,9 @@ public class UserControllerTest {
 
     private UserModelConverter userModelConverter = new UserModelConverter();
 
-    private static final String PASSWD_KEY = "password12345678";
-    private static final String EMAIL_KEY = "email12345678910";
-
 
     @Test
     public void userList_existingUsers_shouldReturnJsonArray() throws Exception {
-        userModelConverter.setEmailKey(EMAIL_KEY);
-        userModelConverter.setPasswdKey(PASSWD_KEY);
-
         UserEntity random = UserModelConverterTest.getRandomEntity(1L);
         UserDTO result = userModelConverter.convertToDTO(random);
         List<UserEntity> userList = Arrays.asList(random);
@@ -68,9 +62,6 @@ public class UserControllerTest {
 
     @Test
     public void userDetail_existingUser_shouldReturnJson() throws Exception {
-        userModelConverter.setEmailKey(EMAIL_KEY);
-        userModelConverter.setPasswdKey(PASSWD_KEY);
-
         Long seq = 1L;
         UserEntity random = UserModelConverterTest.getRandomEntity(seq);
         UserDTO result = userModelConverter.convertToDTO(random);

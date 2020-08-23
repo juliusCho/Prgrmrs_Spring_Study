@@ -1,12 +1,21 @@
 package com.github.prgrms.socialserver.users.model;
 
+import com.github.prgrms.socialserver.global.utils.DateUtil;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static java.time.LocalDateTime.now;
+
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = -7896294193836119831L;
+
+
 
     public UserEntity(Builder builder) {
         seq = builder.seq;
@@ -17,9 +26,13 @@ public class UserEntity implements Serializable {
         createAt = builder.createAt;
     }
 
+
+
+
+
     private final Long seq;
 
-    private final String email;
+    private final EmailVO email;
 
     private final String passwd;
 
@@ -29,29 +42,42 @@ public class UserEntity implements Serializable {
 
     private LocalDateTime createAt;
 
+    private String lastLoginDt;
+
+    private String createDt;
+
+
+
+
+
 
     public static class Builder {
-        private final Long seq;
-        private final String email;
-        private final String passwd;
+        private Long seq;
+        private EmailVO email;
+        private String passwd;
         private Integer loginCount;
         private LocalDateTime lastLoginAt;
         private LocalDateTime createAt;
 
         public Builder(Long seq) {
             this.seq = seq;
-            this.email = "";
+            this.email = null;
             this.passwd = "";
         }
         public Builder(String email, String passwd) {
             this.seq = 0L;
-            this.email = email;
+            this.email = new EmailVO(email);
             this.passwd = passwd;
         }
         public Builder(Long seq, String email, String passwd) {
             this.seq = seq;
-            this.email = email;
+            this.email = new EmailVO(email);
             this.passwd = passwd;
+        }
+        public Builder(String email) {
+            this.seq = 0L;
+            this.email = new EmailVO(email);
+            this.passwd = "";
         }
         public Builder loginCount(Integer loginCount) {
             this.loginCount = loginCount;
@@ -71,11 +97,15 @@ public class UserEntity implements Serializable {
     }
 
 
+
+
+
+
     public Long getSeq() {
         return this.seq;
     }
 
-    public String getEmail() {
+    public EmailVO getEmail() {
         return this.email;
     }
 
@@ -95,30 +125,54 @@ public class UserEntity implements Serializable {
         return this.createAt;
     }
 
+    public String getLastLoginDt() {
+        return DateUtil.convertToLocalString(this.getLastLoginAt());
+    }
+
+    public String getCreateDt() {
+        return DateUtil.convertToLocalString(this.getCreateAt());
+    }
+
+
+
+
+    public void afterLoginSuccess() {
+        loginCount++;
+        lastLoginAt = now();
+    }
+
+    public void login(PasswordEncoder passwordEncoder, String credentials) {
+        if (!passwordEncoder.matches(credentials, passwd))
+            throw new IllegalArgumentException("Bad credential");
+    }
+
+
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         final UserEntity entity = (UserEntity) o;
-        return this.email.equals(entity.email) &&
-                this.passwd.equals(entity.passwd);
+        return this.email.getAddress().equals(entity.email.getAddress());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.email, this.passwd);
+        return Objects.hash(this.email.getAddress());
     }
 
     @Override
     public String toString() {
-        return "UserEntity{" +
-                "seq=" + seq +
-                ", email='" + email + '\'' +
-                ", passwd='" + passwd + '\'' +
-                ", loginCount=" + loginCount +
-                ", lastLoginAt=" + lastLoginAt +
-                ", createAt=" + createAt +
-                '}';
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("seq", seq)
+                .append("email", email)
+                .append("password", "[PROTECTED]")
+                .append("loginCount", loginCount)
+                .append("lastLoginAt", lastLoginAt)
+                .append("createAt", createAt)
+                .append("lastLoginDt", lastLoginDt)
+                .append("createDt", createDt)
+                .toString();
     }
 
 }
