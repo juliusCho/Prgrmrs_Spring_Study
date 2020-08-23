@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 @Configuration
-public class WebMvcConfigure implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
   private final String baseApiPath = "api";
 

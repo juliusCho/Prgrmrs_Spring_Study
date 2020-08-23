@@ -1,5 +1,6 @@
 package com.github.prgrms.socialserver.users.model;
 
+import com.github.prgrms.socialserver.global.security.Jwt;
 import com.github.prgrms.socialserver.global.utils.DateUtil;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -144,6 +145,12 @@ public class UserEntity implements Serializable {
     public void login(PasswordEncoder passwordEncoder, String credentials) {
         if (!passwordEncoder.matches(credentials, passwd))
             throw new IllegalArgumentException("Bad credential");
+    }
+
+    public String newApiToken(Jwt jwt, String[] roles) {
+        // TODO jwt 토큰에 이름 프로퍼티 추가
+        Jwt.Claims claims = Jwt.Claims.of(seq, email, roles);
+        return jwt.newToken(claims);
     }
 
 

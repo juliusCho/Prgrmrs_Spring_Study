@@ -8,10 +8,12 @@ public interface UserRepository {
 
     List<UserEntity> getAllUsers();
 
-    UserEntity getUserDetail(Long seq);
+    UserEntity findById(Long seq);
 
-    UserEntity checkUserExist(String email);
+    UserEntity findByEmail(String email);
 
     int insertUser(UserEntity entity);
+
+    void update(UserEntity userEntity);
 
 }

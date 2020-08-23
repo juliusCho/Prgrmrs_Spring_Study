@@ -10,17 +10,17 @@ WHERE NOT EXISTS (SELECT seq FROM users WHERE email = 'test02@gmail.com');
 
 
 INSERT INTO posts (user_seq, contents, like_count, comment_count, create_at)
-SELECT 1, 'test01 first post', 1, 1, '2019-03-01 13:10:00'
-WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 1 AND contents = 'test01 first post');
+SELECT 1, 'test01 first postEntity', 1, 1, '2019-03-01 13:10:00'
+WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 1 AND contents = 'test01 first postEntity');
 INSERT INTO posts (user_seq, contents, like_count, comment_count, create_at)
-SELECT 1, 'test01 second post', 0, 0, '2019-03-12 09:45:00'
-WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 1 AND contents = 'test01 second post');
+SELECT 1, 'test01 second postEntity', 0, 0, '2019-03-12 09:45:00'
+WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 1 AND contents = 'test01 second postEntity');
 INSERT INTO posts (user_seq, contents, like_count, comment_count, create_at)
-SELECT 1, 'test01 third post', 0, 0, '2019-03-20 19:05:00'
-WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 1 AND contents = 'test01 third post');
+SELECT 1, 'test01 third postEntity', 0, 0, '2019-03-20 19:05:00'
+WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 1 AND contents = 'test01 third postEntity');
 INSERT INTO posts (user_seq, contents, like_count, comment_count, create_at)
-SELECT 2, 'test02 post', 0, 0, '2019-03-20 15:13:20'
-WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 2 AND contents = 'test02 post');
+SELECT 2, 'test02 postEntity', 0, 0, '2019-03-20 15:13:20'
+WHERE NOT EXISTS (SELECT seq FROM posts WHERE user_seq = 2 AND contents = 'test02 postEntity');
 
 
 INSERT INTO comments (user_seq, post_seq, contents, create_at)

@@ -5,12 +5,15 @@ import com.github.prgrms.socialserver.users.model.UserEntity;
 import com.github.prgrms.socialserver.users.model.UserModelConverter;
 import com.github.prgrms.socialserver.users.model.UserModelConverterTest;
 import org.junit.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -19,10 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @ComponentScan(basePackages = {"com.github.prgrms.socialserver"})
-public class UserRepositoryImplTest {
+public class JdbcUserRepositoryTest {
 
-    private static final Logger log = LoggerFactory.getLogger(UserRepositoryImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JdbcUserRepositoryTest.class);
 
     private String h2 = "jdbc:h2:file:~/prgrmrs6/class#1_julius/h2";
 
@@ -41,7 +46,7 @@ public class UserRepositoryImplTest {
 
     private JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-    private UserRepositoryImpl userRepositoryImpl = new UserRepositoryImpl(jdbcTemplate, new UserMapper());
+    private JdbcUserRepository jdbcUserRepository = new JdbcUserRepository(jdbcTemplate, new UserMapper());
 
 
     @Test
@@ -55,7 +60,7 @@ public class UserRepositoryImplTest {
     public void dao_selectOne_shouldGetSeq1User() throws Exception {
         UserEntity random = UserModelConverterTest.getRandomEntity(1L);
 
-        UserEntity entity = (UserEntity) userRepositoryImpl.getUserDetail(random.getSeq());
+        UserEntity entity = (UserEntity) jdbcUserRepository.findById(random.getSeq());
         log.debug("RESULT: {}", entity);
         assert(random.getSeq().compareTo(entity.getSeq()) == 0);
     }
@@ -67,7 +72,7 @@ public class UserRepositoryImplTest {
         randomList.add(UserModelConverterTest.getRandomEntity(2L));
         randomList.add(UserModelConverterTest.getRandomEntity(3L));
 
-        List<UserEntity> entityList = userRepositoryImpl.getAllUsers();
+        List<UserEntity> entityList = jdbcUserRepository.getAllUsers();
         log.debug("RESULT: {}", entityList);
 
         for (UserEntity random: randomList) {
@@ -76,16 +81,22 @@ public class UserRepositoryImplTest {
     }
 
     @Test
-    public void dao_insertUser_succeedAndResponse() throws Exception {
+    public void dao_insertUser_errorResponse() throws Exception {
         UserModelConverter userModelConverter = new UserModelConverter();
 
-        UserEntity random = UserModelConverterTest.getRandomEntity(99L);
-        UserDTO dto = UserModelConverter.convertToDTO(UserModelConverterTest.getRandomEntity(99L));
+        UserEntity random = UserModelConverterTest.getRandomEntity(1L);
+        UserDTO dto = UserModelConverter.convertToDTO(UserModelConverterTest.getRandomEntity(1L));
         log.debug("DTO: {}", UserModelConverter.convertToDTO(random));
 
-        int number = userRepositoryImpl.insertUser(UserModelConverter.convertToEntity(dto));
-        log.debug("RESULT: {}", number);
-        assert (number != 0);
+        DuplicateKeyException e = null;
+        try {
+            int number = jdbcUserRepository.insertUser(UserModelConverter.convertToEntity(dto));
+            log.debug("RESULT: {}", number);
+        } catch (DuplicateKeyException e1) {
+            e = e1;
+//        } finally {
+//            assert (e != null);
+        }
     }
 
 }

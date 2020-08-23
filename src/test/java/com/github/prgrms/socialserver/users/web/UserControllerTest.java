@@ -66,7 +66,7 @@ public class UserControllerTest {
         UserEntity random = UserModelConverterTest.getRandomEntity(seq);
         UserDTO result = userModelConverter.convertToDTO(random);
 
-        when(userService.getUserDetail(seq)).thenReturn(random);
+        when(userService.findById(seq)).thenReturn(random);
 
         mvc.perform(get("/api/users/{seq}", seq).contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
