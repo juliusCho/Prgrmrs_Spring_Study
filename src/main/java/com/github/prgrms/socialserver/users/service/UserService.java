@@ -1,5 +1,7 @@
 package com.github.prgrms.socialserver.users.service;
 
+import com.github.prgrms.socialserver.global.model.IdVO;
+import com.github.prgrms.socialserver.users.model.ConnectedUserEntity;
 import com.github.prgrms.socialserver.users.model.EmailVO;
 import com.github.prgrms.socialserver.users.model.UserEntity;
 import com.github.prgrms.socialserver.users.repository.UserRepository;
@@ -34,12 +36,12 @@ public class UserService {
         return userRepository.getAllUsers();
     }
 
-    public UserEntity findById(Long seq) {
-        return userRepository.findById(seq);
+    public UserEntity findById(IdVO<UserEntity, Long> id) {
+        return userRepository.findById(id.value());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int insertUser(String input) throws JSONException {
+    public UserEntity insertUser(String input) throws JSONException {
         JSONObject jsonObject = new JSONObject(input);
         UserEntity entity = new UserEntity
                 .Builder(jsonObject.getString("principal"), jsonObject.getString("credentials"))
@@ -61,6 +63,20 @@ public class UserService {
         userEntity.afterLoginSuccess();
         userRepository.update(userEntity);
         return userEntity;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ConnectedUserEntity> findAllConnectedUser(IdVO<UserEntity, Long> userId) {
+        checkNotNull(userId, "userId must be provided.");
+
+        return userRepository.findAllConnectedUser(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<IdVO<UserEntity, Long>> findConnectedIds(IdVO<UserEntity, Long> userId) {
+        checkNotNull(userId, "userId must be provided.");
+
+        return userRepository.findConnectedIds(userId);
     }
 
 }

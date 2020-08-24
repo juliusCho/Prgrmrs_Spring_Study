@@ -90,8 +90,8 @@ public class JdbcUserRepositoryTest {
 
         DuplicateKeyException e = null;
         try {
-            int number = jdbcUserRepository.insertUser(UserModelConverter.convertToEntity(dto));
-            log.debug("RESULT: {}", number);
+            UserEntity userEntity = jdbcUserRepository.insertUser(UserModelConverter.convertToEntity(dto));
+            log.debug("RESULT: {}", userEntity);
         } catch (DuplicateKeyException e1) {
             e = e1;
 //        } finally {

@@ -10,8 +10,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class JwtAuthenticationVO {
 
-    private final IdVO<UserEntity, Long> id;
-    private final EmailVO email;
+    public final IdVO<UserEntity, Long> id;
+    public final EmailVO email;
 
     // TODO 이름 프로퍼티 추가
 

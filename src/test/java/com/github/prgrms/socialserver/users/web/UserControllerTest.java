@@ -3,6 +3,7 @@ package com.github.prgrms.socialserver.users.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.prgrms.socialserver.global.model.ApiResponseDTO;
+import com.github.prgrms.socialserver.global.model.IdVO;
 import com.github.prgrms.socialserver.users.model.UserDTO;
 import com.github.prgrms.socialserver.users.model.UserEntity;
 import com.github.prgrms.socialserver.users.model.UserModelConverter;
@@ -66,7 +67,7 @@ public class UserControllerTest {
         UserEntity random = UserModelConverterTest.getRandomEntity(seq);
         UserDTO result = userModelConverter.convertToDTO(random);
 
-        when(userService.findById(seq)).thenReturn(random);
+        when(userService.findById(IdVO.of(UserEntity.class, seq))).thenReturn(random);
 
         mvc.perform(get("/api/users/{seq}", seq).contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
@@ -79,9 +80,8 @@ public class UserControllerTest {
         map.put("principal", "user1@prgrmrs6.com");
         map.put("credentials", "1");
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO(true, "1");
-        int number = 1;
 
-        when(userService.insertUser(asJsonString(map))).thenReturn(number);
+        when(userService.insertUser(asJsonString(map))).thenReturn(new UserEntity.Builder("user1@prgrmrs6.com", "1").build());
 
         mvc.perform(post("/api/users/join").contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
