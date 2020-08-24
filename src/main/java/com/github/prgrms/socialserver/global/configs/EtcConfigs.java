@@ -29,9 +29,9 @@ public class EtcConfigs {
     @Bean
     @Profile("test")
     public DataSource testDataSource() {
-        DataSourceBuilder factory = DataSourceBuilder.create()
+        DataSourceBuilder<? extends DataSource> factory = DataSourceBuilder.create()
                 .driverClassName("org.h2.Driver")
-                .url("jdbc:h2:file:~/prgrmrs6/class#1_julius/h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE");
+                .url("jdbc:h2:file:~/prgrmrs6/class#2_julius/h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE");
         HikariDataSource dataSource = (HikariDataSource) factory.build();
         dataSource.setPoolName("TEST_DB");
         dataSource.setMinimumIdle(1);

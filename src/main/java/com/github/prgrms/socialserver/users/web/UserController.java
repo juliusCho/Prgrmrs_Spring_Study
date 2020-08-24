@@ -8,7 +8,6 @@ import com.github.prgrms.socialserver.global.types.Role;
 import com.github.prgrms.socialserver.global.web.GlobalController;
 import com.github.prgrms.socialserver.users.model.*;
 import com.github.prgrms.socialserver.users.service.UserService;
-import org.json.JSONException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -54,16 +53,6 @@ public class UserController extends GlobalController {
         );
     }
 
-    @PostMapping(value = "join", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    public ApiResponseDTO<JoinResultDTO> insertUser(@RequestBody String input) throws JSONException {
-        UserEntity entity = userService.insertUser(input);
-        String apiToken = entity.newApiToken(jwt, new String[] {Role.USER.value()});
-        return new ApiResponseDTO(
-                    true,
-                    new JoinResultDTO(apiToken, UserModelConverter.convertToDTO(entity))
-                );
-    }
-
     @GetMapping(path = "connections")
     public ApiResponseDTO<List<ConnectedUserDTO>> connections(@AuthenticationPrincipal JwtAuthenticationVO authentication) {
         return new ApiResponseDTO(
@@ -71,6 +60,16 @@ public class UserController extends GlobalController {
                 userService.findAllConnectedUser(authentication.id).stream()
                         .map(ConnectedUserDTO::new)
                         .collect(toList())
+        );
+    }
+
+    @PostMapping(path = "user/join")
+    public ApiResponseDTO<JoinResultDTO> join(@RequestBody JoinRequestDTO joinRequest) {
+        UserEntity user = userService.join(new EmailVO(joinRequest.getPrincipal()), joinRequest.getCredentials());
+        String apiToken = user.newApiToken(jwt, new String[]{Role.USER.value()});
+        return new ApiResponseDTO(
+                true,
+                new JoinResultDTO(apiToken, new UserDTO(user))
         );
     }
 

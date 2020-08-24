@@ -5,18 +5,17 @@ import com.github.prgrms.socialserver.users.model.ConnectedUserEntity;
 import com.github.prgrms.socialserver.users.model.EmailVO;
 import com.github.prgrms.socialserver.users.model.UserEntity;
 import com.github.prgrms.socialserver.users.repository.UserRepository;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 public class UserService {
@@ -40,18 +39,20 @@ public class UserService {
         return userRepository.findById(id.value());
     }
 
+    public UserEntity findByEmail(EmailVO email) {
+        checkNotNull(email, "email must be provided.");
+        return userRepository.findByEmail(email.getAddress());
+    }
+
     @Transactional(rollbackFor = Exception.class)
-    public UserEntity insertUser(String input) throws JSONException {
-        JSONObject jsonObject = new JSONObject(input);
-        UserEntity entity = new UserEntity
-                .Builder(jsonObject.getString("principal"), jsonObject.getString("credentials"))
-                .build();
-        try {
-            userRepository.findByEmail(entity.getEmail().getAddress());
-        } catch (EmptyResultDataAccessException e) {
-            return userRepository.insertUser(entity);
-        }
-        throw new IllegalArgumentException();
+    public UserEntity join(EmailVO email, String passwd) {
+        checkArgument(isNotEmpty(passwd), "password must be provided.");
+        checkArgument(
+                passwd.length() >= 4 && passwd.length() <= 15,
+                "password length must be between 4 and 15 characters."
+        );
+        UserEntity entity = new UserEntity.Builder(email.getAddress(), passwordEncoder.encode(passwd)).build();
+        return userRepository.insertUser(entity);
     }
 
     @Transactional

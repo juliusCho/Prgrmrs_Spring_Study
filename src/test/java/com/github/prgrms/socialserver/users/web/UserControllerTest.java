@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.prgrms.socialserver.global.model.ApiResponseDTO;
 import com.github.prgrms.socialserver.global.model.IdVO;
-import com.github.prgrms.socialserver.users.model.UserDTO;
-import com.github.prgrms.socialserver.users.model.UserEntity;
-import com.github.prgrms.socialserver.users.model.UserModelConverter;
-import com.github.prgrms.socialserver.users.model.UserModelConverterTest;
+import com.github.prgrms.socialserver.users.model.*;
 import com.github.prgrms.socialserver.users.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,7 +78,7 @@ public class UserControllerTest {
         map.put("credentials", "1");
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO(true, "1");
 
-        when(userService.insertUser(asJsonString(map))).thenReturn(new UserEntity.Builder("user1@prgrmrs6.com", "1").build());
+        when(userService.join(new EmailVO("user1@prgrmrs6.com"), "1")).thenReturn(new UserEntity.Builder("user1@prgrmrs6.com", "1").build());
 
         mvc.perform(post("/api/users/join").contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
